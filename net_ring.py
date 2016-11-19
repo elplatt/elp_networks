@@ -1,4 +1,4 @@
-from networks import *
+from network import *
 
 class Ring(Network):
     
@@ -15,20 +15,10 @@ class Ring(Network):
                 w = delta % n
                 self.edges.add(frozenset((v, w)))
     
-    @classmethod
-    def iternodes(cls, n, m=1):
+    def nodes(self):
         return xrange(n)
     
-    @classmethod
-    def iterneighbors(cls, n, m, v):
-        for delta in xrange(1,m+1):
-            yield (v - delta) % n
-            yield (v + delta) % n
-    
     def neighbors(self, v):
-        return Ring.iterneighbors(self.n, self.m, v)
-    
-    @classmethod
-    def pathlength_counts(cls, m):
-        raise NotImplementedError
-
+        for delta in xrange(1,self.m+1):
+            yield (v - delta) % self.n
+            yield (v + delta) % self.n
