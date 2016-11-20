@@ -255,6 +255,23 @@ class TestNestedClique(unittest.TestCase):
         for v, neighbors in nq_three_neighbors.items():
             self.assertEqual(set(net.neighbors(v)), neighbors)
 
+class TestLattice(unittest.TestCase):
+    
+    def test_one(self):
+        net = enet.Lattice(1, 3)
+        self.assertEqual(set(net.nodes()), set([(0,),(1,),(2,)]))
+        self.assertEqual(set(net.neighbors((0,))), set([(1,), (2,)]))
+        
+    def test_two(self):
+        net = enet.Lattice(2, 3)
+        self.assertEqual(
+            set(net.nodes()),
+            set([(0,0),(0,1),(0,2),(1,0),(1,1),(1,2),(2,0),(2,1),(2,2)]))
+        self.assertEqual(
+            set(net.neighbors((0,1))),
+            set([(2,1),(1,1),(0,0),(0,2)])
+        )
+
 if __name__ == '__main__':
     unittest.main()
     
