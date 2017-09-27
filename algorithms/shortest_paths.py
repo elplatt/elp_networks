@@ -1,26 +1,39 @@
 
-def floyd_warshall(edges_from):
+def floyd_warshall(weights_from_to):
     '''Find shortest paths between all edge pairs in a weighted graph with no negative cycles.
-    edges_from: dict mapping source nodes to to their neighbors.
+    weights_from_to: dict of mapping (source, target) pairs to their edge weights.
     returns: (distances, paths) dicst mapping node pairs to their distances and shortest path(s).
     '''
     # Create sorted list of nodes
-    nodes = set(edges_from.keys())
-    for source, targets in edges_from.iteritems():
-        nodes |= set(targets)
+    nodes = set()
+    for edge, weight in weights_from_to.iteritems():
+        source, target = edge
+        nodes.add(source)
+        nodes.add(target)
     nodes = sorted(nodes)
-    # Initialize distances
+    node_index = dict([(node, i) for i, node in enumerate(nodes)])
+    # Initialize distances and paths
+    # For each source, target, there is a list of shortest paths (there may be multiple of the same length)
     dist = [[float("inf") for target in nodes] for source in nodes]
+    paths = [[ [] for target in nodes] for source in nodes]
     for k, node in enumerate(nodes):
         dist[k][k] = 0
-    # Initialize paths
-    # For each source, target, there is a list of shortest paths (there may be multiple of the same length)
-    paths = [[[] for taret in nodes] for source in nodes]
+        paths[k][k].append([k])
+    for edge, weight in weights_from_to.iteritems():
+        source, target = edge
+        i = node_index[source]
+        j = node_index[target]
+        dist[i][j] = weight
+        paths[i][j].append([i,j])
     # Use only first k nodes
     for k, node in enumerate(nodes):
         # Loop through pairs
         for i, source in enumerate(nodes):
             for j, target in enumerate(nodes):
+                if i == j or i == k or j == k:
+                    # Ignore if endpoints are the same
+                    # or if intermediate node is one of the endpoints
+                    continue
                 # Find shortest path using k
                 dist_k = dist[i][k] + dist[k][j]
                 # Find shortest path not using k
@@ -46,4 +59,13 @@ def floyd_warshall(edges_from):
                             # Merge paths, remove one k
                             newpath = ipath[:-1] + jpath
                             paths_ij.append(newpath)
-    return (dist, paths)
+    # Convert distances and paths from indexes to labels
+    dist_dict = {}
+    path_dict = {}
+    for i, source in enumerate(nodes):
+        dist_dict[source] = {}
+        path_dict[source] = {}
+        for j, target in enumerate(nodes):
+            dist_dict[source][target] = dist[i][j]
+            path_dict[source][target] = [[nodes[n] for n in path] for path in paths[i][j]]
+    return (dist_dict, path_dict)
