@@ -3,7 +3,7 @@ from network import *
 class Ring(Network):
     
     def __init__(self, n, m=1):
-        '''Create an n-node clique with connections to 2m nearest neighbors.'''
+        '''Create an n-node ring with connections to 2m nearest neighbors.'''
         self.m = m
         self.n = n
         # Create nodes
