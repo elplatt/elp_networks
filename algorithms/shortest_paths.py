@@ -2,7 +2,10 @@
 def floyd_warshall(weights_from_to):
     '''Find shortest paths between all edge pairs in a weighted graph with no negative cycles.
     weights_from_to: dict of mapping (source, target) pairs to their edge weights.
-    returns: (distances, paths) dicst mapping node pairs to their distances and shortest path(s).
+    returns: (distances, paths)
+        distances: maps (source, target) node pairs to their shortest path distance.
+        paths: maps (source, target) node pairs to a list of shortest paths. Each path is a list
+            of intermediate nodes (without the source or target node).
     '''
     # Create sorted list of nodes
     nodes = set()
