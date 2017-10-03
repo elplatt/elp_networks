@@ -18,13 +18,13 @@ def floyd_warshall(weights_from_to):
     paths = [[ [] for target in nodes] for source in nodes]
     for k, node in enumerate(nodes):
         dist[k][k] = 0
-        paths[k][k].append([k])
+        paths[k][k].append([])
     for edge, weight in weights_from_to.iteritems():
         source, target = edge
         i = node_index[source]
         j = node_index[target]
         dist[i][j] = weight
-        paths[i][j].append([i,j])
+        paths[i][j].append([])
     # Use only first k nodes
     for k, node in enumerate(nodes):
         # Loop through pairs
@@ -45,8 +45,8 @@ def floyd_warshall(weights_from_to):
                     # Add new paths
                     for ipath in paths[i][k]:
                         for jpath in paths[k][j]:
-                            # Merge paths, remove one k
-                            newpath = ipath[:-1] + jpath
+                            # Merge paths
+                            newpath = ipath + [k] + jpath
                             paths_ij.append(newpath)
                     # Replace old paths
                     paths[i][j] = paths_ij
@@ -56,8 +56,8 @@ def floyd_warshall(weights_from_to):
                     paths_ij = paths[i][j]
                     for ipath in paths[i][k]:
                         for jpath in paths[k][j]:
-                            # Merge paths, remove one k
-                            newpath = ipath[:-1] + jpath
+                            # Merge paths
+                            newpath = ipath + [k] + jpath
                             paths_ij.append(newpath)
     # Convert distances and paths from indexes to labels
     dist_dict = {}
