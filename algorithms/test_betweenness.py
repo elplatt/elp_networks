@@ -1,5 +1,5 @@
 import unittest
-from betweenness import betweenness
+from betweenness import betweenness, recalculated_betweenness
 
 weight_from_to = {
     ("A", "B"): 1,
@@ -27,6 +27,22 @@ true_paths = {
 true_betweenness = {'A':2, 'B':0.5, 'C':0.5, 'D':4}
 true_betweenness_normalized = {'A':2.0/6.0, 'B':0.5/6.0, 'C':0.5/6.0, 'D':4.0/6.0}
 
+recalc_weight_from_to = {
+    ('A','B'): 1,
+    ('A','C'): 1,
+    ('A','D'): 1,
+    ('B','A'): 1,
+    ('C','A'): 1,
+    ('D','A'): 1,
+    ('B','C'): 3,
+    ('B','D'): 3,
+    ('C','B'): 3,
+    ('D','B'): 3,
+    ('D','C'): 7,
+    ('C','D'): 7    
+}
+recalc_true_betweenness = [('A', 6.0), ('B', 2.0)]
+
 class TestBetweenness(unittest.TestCase):
     
     def test_betweenness(self):
@@ -36,6 +52,10 @@ class TestBetweenness(unittest.TestCase):
     def test_betweenness_unnormalized(self):
         b = betweenness(weight_from_to, normalized=False)
         self.assertEqual(b, true_betweenness)
+
+    def test_betweenness_recalculated(self):
+        b = recalculated_betweenness(recalc_weight_from_to, normalized=False)
+        self.assertEqual(list(b), recalc_true_betweenness)
 
 if __name__ == '__main__':
     unittest.main()
