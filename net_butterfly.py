@@ -1,3 +1,4 @@
+import math
 from network import *
 
 class Butterfly(Network):
@@ -37,3 +38,8 @@ class Butterfly(Network):
             yield up_left
             sofar.add(up_left)
 
+    def int_neighbors(self, vi):
+        z = int(math.floor(vi / 2**self.m))
+        l = vi - z * 2**self.m
+        for nz, nl in self.neighbors((z,l)):
+            yield nz*2**self.m + nl
