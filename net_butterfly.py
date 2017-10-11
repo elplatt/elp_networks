@@ -13,6 +13,10 @@ class Butterfly(Network):
                 node = (level, in_level)
                 yield node
         
+    def int_nodes(self):
+        for z, l in self.nodes():
+            yield z*2**self.m + l
+        
     def neighbors(self, v):
         sofar = set([v])
         level, in_level = v
